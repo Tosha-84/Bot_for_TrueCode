@@ -103,7 +103,7 @@ async def channel_caps(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 if __name__ == '__main__':
-    application = ApplicationBuilder().token('5648589910:AAFArjtVL_BcnCKzRbJcKRpnlfRJV97YLWo').build()
+    application = ApplicationBuilder().token('Здесь Токен').build()
 
     echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), echo)
     caps_handler = CommandHandler('caps', caps)
