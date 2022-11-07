@@ -44,13 +44,13 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await context.bot.send_message(chat_id=-1001567792707, text=update.message.text)
     await context.bot.send_message(chat_id=-1001567792707, text=update.effective_user.id)
-    #await context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.chat_id)
+    #await cxontext.bot.send_message(chat_id=update.effective_chat.id, text=update.message.chat_id)
     #await context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.id)
 
 
 
-    phone_number = "89025143603"
-    #phone_number = "89148891191"
+    # phone_number = "89025143603"
+    phone_number = "89148891191"
 
     # print(update.message.chat_id)
     await context.bot.send_contact(-1001567792707, phone_number, "Name")
