@@ -3,8 +3,8 @@ from pyrogram import client, filters
 
 #app = client.Client("my_account")
 
-api_id = 24648483
-api_hash = "9260bd2eba93540061e9aef0f518ea7e"
+api_id = id
+api_hash = "hash"
 app = client.Client("my_account", api_id=api_id, api_hash=api_hash)
 
 #
