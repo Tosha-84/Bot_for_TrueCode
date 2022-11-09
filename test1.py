@@ -1,4 +1,6 @@
 import asyncio
+
+import aioschedule
 import aioschedule as schedule
 import time
 
@@ -63,6 +65,14 @@ async def job(message='stuff', n=1):
     asyncio.sleep(1)
 
 
+async def start_schedule():
+    aioschedule.every(20).seconds.do(job)
+    while True:
+        await aioschedule.run_pending()
+        await asyncio.sleep(1)
+
+
+
 # Это было в документации к библиотеке aioschedule
 for i in range(1, 2):
     schedule.every(20).seconds.do(job, n=i)
@@ -71,7 +81,7 @@ schedule.every().hour.do(job, message='things')
 schedule.every().day.at("10:30").do(job)
 
 loop = asyncio.get_event_loop()
-while True:
-    app.run() # Вот это где-то должно быть, но я не знаю, где, без этого ошибка о том, что бот не запущен
-    loop.run_until_complete(schedule.run_pending())
-    time.sleep(0.1)
+# while True:
+#     # app.run() # Вот это где-то должно быть, но я не знаю, где, без этого ошибка о том, что бот не запущен
+#     loop.run_until_complete(schedule.run_pending())
+#     time.sleep(0.1)
