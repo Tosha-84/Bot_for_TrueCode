@@ -7,6 +7,7 @@ from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHan
 
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 from telegram.ext import InlineQueryHandler
+from telegram import MenuButton
 
 # Часть ниже предназначена для ведения журнала, чтобы знать, что и когда не работает должным образом
 logging.basicConfig(
@@ -18,6 +19,9 @@ logging.basicConfig(
 # Команда start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
+    menuButton = MenuButton()
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=menuButton)
+
 
 
 # Команда caps, нужно сделать обработчик на пустое сообщение
