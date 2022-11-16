@@ -3,7 +3,6 @@ from pyrogram import client, filters
 from excel_parsing import parse_excel
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-
 api_id = 24648483
 api_hash = "9260bd2eba93540061e9aef0f518ea7e"
 app = client.Client("my_account", api_id=api_id, api_hash=api_hash)
@@ -31,7 +30,9 @@ async def job(filename: str):
 
 
 async def start_bot(filename: str):
+
+    app.run()
     scheduler = AsyncIOScheduler()
     scheduler.add_job(job, "interval", args=[filename], seconds=60)
     scheduler.start()
-    app.run()
+
