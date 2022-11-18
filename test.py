@@ -19,7 +19,6 @@ async def String_to_Command(string):
 async def make_markup_wo_upload_file():
     markup = telebot.types.InlineKeyboardMarkup()
     buttonA = telebot.types.InlineKeyboardButton('Остановить добавление', callback_data='stop')
-    buttonC = telebot.types.InlineKeyboardButton('Начать добавление', callback_data='start')
     buttonD = telebot.types.InlineKeyboardButton('Настройки', callback_data='settings')
 
     markup.row(buttonC, buttonA)
@@ -32,12 +31,9 @@ async def make_markup():
     markup = telebot.types.InlineKeyboardMarkup()
     buttonA = telebot.types.InlineKeyboardButton('Остановить добавление', callback_data='stop')
     buttonB = telebot.types.InlineKeyboardButton('Загрузить документ с номерами', callback_data='upload')
-    buttonC = telebot.types.InlineKeyboardButton('Начать добавление', callback_data='start')
-    buttonD = telebot.types.InlineKeyboardButton('Настройки', callback_data='settings')
 
     markup.row(buttonB)
-    markup.row(buttonC, buttonA)
-    markup.row(buttonD)
+    markup.row(buttonA)
 
     return markup
 
@@ -80,47 +76,31 @@ async def get_file(message):
             os.mkdir(files_dir)
             with open(f"{files_dir}/file_0.xlsx", 'wb') as new_file:
                 new_file.write(downloaded_file)
-            markup = await make_markup_wo_upload_file()
-            await bot.send_message(message.chat.id, 'Файл успешно загружен', reply_markup=markup)
+        markup = await make_markup_wo_upload_file()
+        await bot.send_message(message.chat.id, 'Файл успешно загружен. Сейчас начнется добавление в канал', reply_markup=markup)
 
 
 @bot.callback_query_handler(func=lambda call: True)
 async def handle(call):
     # global app
-    if call.data == 'start':
-        filename = f"{call.message.chat.id}_file.xlsx"
-    elif call.data == 'stop':
-        print()
+    if call.data == 'stop':
+        try:
+            files_dir = f"users_files/{call.message.chat.id}"
+            if os.path.exists(files_dir):
+                counter = len(os.listdir(files_dir)) - 1
+                os.remove(f"{files_dir}/file_{counter}.xlsx")
+                await bot.send_message(chat_id=call.message.chat.id, text='Файл удален. Если вы захотите продолжить, то файл придется загрузить заново')
+        except:
+            await bot.send_message(chat_id=call.message.chat.id, text='К сожалению, файлы не найдены(')
     elif call.data == 'upload':
-        await bot.send_message(chat_id=call.message.chat.id, text='Загрузите файл в формате xlsx')
-    elif call.data == 'settings':
-        print()
-        markup = telebot.types.InlineKeyboardMarkup()
-        button20 = telebot.types.InlineKeyboardButton('20', callback_data='amount')
-        button50 = telebot.types.InlineKeyboardButton('50', callback_data='amount')
-        button100 = telebot.types.InlineKeyboardButton('100', callback_data='amount')
-        button150 = telebot.types.InlineKeyboardButton('150', callback_data='amount')
-        button200 = telebot.types.InlineKeyboardButton('200', callback_data='amount')
-        button250 = telebot.types.InlineKeyboardButton('250', callback_data='amount')
-
-        markup.row(button20, button50)
-        markup.row(button100, button150)
-        markup.row(button200, button250)
-        await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберите'
-                                                                                                     'лимит добавления'
-                                                                                                     'количества'
-                                                                                                     'пользователей',
-                              reply_markup=markup)
+        await bot.send_message(chat_id=call.message.chat.id, text='Загрузите файл в формате .xlsx')
     elif call.data == 'amount':
         markup = telebot.types.InlineKeyboardMarkup()
         buttonA = telebot.types.InlineKeyboardButton('Остановить добавление', callback_data='stop')
         buttonB = telebot.types.InlineKeyboardButton('Загрузить документ с номерами', callback_data='upload')
-        buttonC = telebot.types.InlineKeyboardButton('Начать добавление', callback_data='start')
-        buttonD = telebot.types.InlineKeyboardButton('Настройки', callback_data='settings')
 
         markup.row(buttonB)
-        markup.row(buttonC, buttonA)
-        markup.row(buttonD)
+        markup.row(buttonA)
 
         await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберите'
                                                                                                      'необходимый'
