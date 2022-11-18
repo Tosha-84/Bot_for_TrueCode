@@ -1,7 +1,5 @@
 import telebot
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from test1 import start_bot
-
+import os
 from telebot.async_telebot import AsyncTeleBot
 
 
@@ -9,11 +7,6 @@ from telebot.async_telebot import AsyncTeleBot
 API_TOKEN = '5648589910:AAFArjtVL_BcnCKzRbJcKRpnlfRJV97YLWo'
 # bot = telebot.TeleBot(API_TOKEN)
 bot = AsyncTeleBot(API_TOKEN)
-
-
-# api_id = 24648483
-# api_hash = "9260bd2eba93540061e9aef0f518ea7e"
-# app = client.Client("my_account", api_id=api_id, api_hash=api_hash)
 
 
 async def String_to_Command(string):
@@ -70,33 +63,32 @@ async def start_message(message):
 
 @bot.message_handler(content_types=['document'])
 async def get_file(message):
+    files_dir = f"users_files/{message.chat.id}"
     file_name = message.document.file_name
     file_extension = file_name.split('.')[-1]
     if file_extension != 'xlsx':
         markup = make_markup()
-        bot.send_message(message.chat.id, 'Бот умеет обрабатывать только xlsx файлы(', reply_markup=markup)
+        await bot.send_message(message.chat.id, 'Бот умеет обрабатывать только xlsx файлы(', reply_markup=markup)
     else:
         file_info = await bot.get_file(message.document.file_id)
         downloaded_file = await bot.download_file(file_info.file_path)
-        with open(f"{message.chat.id}_file.xlsx", 'wb') as new_file:
-            new_file.write(downloaded_file)
-        markup = await make_markup_wo_upload_file()
-        await bot.send_message(message.chat.id, 'Файл успешно загружен', reply_markup=markup)
+        if os.path.exists(files_dir):
+            counter = len(os.listdir(files_dir))
+            with open(f"{files_dir}/file_{counter}.xlsx", 'wb') as new_file:
+                new_file.write(downloaded_file)
+        else:
+            os.mkdir(files_dir)
+            with open(f"{files_dir}/file_0.xlsx", 'wb') as new_file:
+                new_file.write(downloaded_file)
+            markup = await make_markup_wo_upload_file()
+            await bot.send_message(message.chat.id, 'Файл успешно загружен', reply_markup=markup)
 
 
 @bot.callback_query_handler(func=lambda call: True)
 async def handle(call):
     # global app
     if call.data == 'start':
-
-        # scheduler = AsyncIOScheduler()
         filename = f"{call.message.chat.id}_file.xlsx"
-        # scheduler.add_job(job, "interval", args=[filename], seconds=60)
-        # scheduler.start()
-        # await app.run()
-        # asyncio.run(start_bot(filename))
-        await asyncio.gather(start_bot(filename))
-
     elif call.data == 'stop':
         print()
     elif call.data == 'upload':
@@ -130,14 +122,10 @@ async def handle(call):
         markup.row(buttonC, buttonA)
         markup.row(buttonD)
 
-        bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберите'
+        await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Выберите'
                                                                                                      'необходимый'
                                                                                                      'пункт',
                               reply_markup=markup)
-
-
-# bot.polling()
-# bot.poll_handlers()
 
 import asyncio
 asyncio.run(bot.polling())

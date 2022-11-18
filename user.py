@@ -84,9 +84,6 @@ async def echo(client):
             print("Был бы ты человек")
     # print(type(users))
     print(people)
-
-
-    print("Прочёсывание")
     for index, elem in enumerate(people): # index может помочь с прочёсыванием не с нуля
         # print(elem)
         # print(people[elem])
