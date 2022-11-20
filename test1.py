@@ -10,16 +10,36 @@ app = client.Client("my_account", api_id=api_id, api_hash=api_hash)
 
 users_files = {}
 
+async def run(filename):
+    # await app.start()
+    await app.run(await job(filename))
+    # await app.stop()
 
 async def job(filename: str):
+    await app.start()
     # надо заранее подсчитать количество заполненных строк в эксель файлике и в зависимости от этого выставлять интервал в jobе
-    people = await parse_excel(filename)
-    async for member in app.get_chat_members(-1001567792707):
-        try:
-            people.pop("+" + member.user.phone_number)
-            print(people["+" + member.user.phone_number])
-        except:
-            print("Был бы ты человек")
+    # people = await parse_excel(filename)
+    # # print(people)
+    # async for member in app.get_chat_members(-1001567792707):
+    #     # print(member)
+    #     people.pop("+" + member.user.phone_number)
+    # print(people)
+    await app.stop()
+
+
+
+    # TARGET = -1001567792707
+    # async with app:
+    #     async for member in app.get_chat_members(TARGET):
+    #         try:
+    #             await people.pop("+" + member.user.phone_number)
+    #             print(people["+" + member.user.phone_number])
+    #         except:
+    #             print("Был бы ты человек")
+    #         await print(member)
+    #
+    # print(people)
+
     # for index, elem in enumerate(people):
     #     # Дообавление пользователя в контакты
     #     new_user = await app.import_contacts([
@@ -30,7 +50,7 @@ async def job(filename: str):
     #         break
     #     except:
     #         continue
-    await asyncio.sleep(1)
+    # await asyncio.sleep(1)
 
 
 async def check_users_files(schedule):
@@ -50,11 +70,14 @@ async def check_users_files(schedule):
                 schedule.add_job(job, "interval", args=[file_path], seconds=parse_time)
                 users_files[username] = [file_path]
     scheduler.start()
+    print(users_files)
+    # print(users_files['484704240'])
+    await job(users_files['484704240'][0])
     return users_files
 
 
 # app.run()
-scheduler = AsyncIOScheduler()
-asyncio.run(check_users_files(scheduler))
+# scheduler = AsyncIOScheduler()
+# asyncio.run(check_users_files(scheduler))
 
 

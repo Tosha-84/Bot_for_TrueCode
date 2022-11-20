@@ -2,6 +2,9 @@ import telebot
 import os
 from telebot.async_telebot import AsyncTeleBot
 
+import test1
+import test2
+
 
 # API_TOKEN = '1986393023:AAGmgNDQVTn_MmBBP1Y8DMJqLVSxwvQOvV8'
 API_TOKEN = '5648589910:AAFArjtVL_BcnCKzRbJcKRpnlfRJV97YLWo'
@@ -21,7 +24,7 @@ async def make_markup_wo_upload_file():
     buttonA = telebot.types.InlineKeyboardButton('Остановить добавление', callback_data='stop')
     buttonD = telebot.types.InlineKeyboardButton('Настройки', callback_data='settings')
 
-    markup.row(buttonC, buttonA)
+    markup.row(buttonA)
     markup.row(buttonD)
 
     return markup
@@ -37,6 +40,12 @@ async def make_markup():
 
     return markup
 
+@bot.message_handler(content_types=['text'])
+async def message(message):
+    await bot.send_message(message.chat.id, message.text)
+    # await test2.app.start()
+    await test2.main()
+    # await test2.app.stop()
 
 # Handle '/start'
 @bot.message_handler(commands=['start'])
@@ -78,6 +87,9 @@ async def get_file(message):
                 new_file.write(downloaded_file)
         markup = await make_markup_wo_upload_file()
         await bot.send_message(message.chat.id, 'Файл успешно загружен. Сейчас начнется добавление в канал', reply_markup=markup)
+
+        await test1.job('users_files/484704240/file_0.xlsx')
+        # await test1.('users_files/484704240/file_0.xlsx')
 
 
 @bot.callback_query_handler(func=lambda call: True)
