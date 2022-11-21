@@ -1,6 +1,7 @@
 import os
 import asyncio
 from pyrogram import client, filters
+from pyrogram import idle
 from excel_parsing import parse_excel
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -16,17 +17,17 @@ async def run(filename):
     # await app.stop()
 
 async def job(filename: str):
-    await app.start()
     # надо заранее подсчитать количество заполненных строк в эксель файлике и в зависимости от этого выставлять интервал в jobе
+    await app.start()
     # people = await parse_excel(filename)
     # # print(people)
     # async for member in app.get_chat_members(-1001567792707):
     #     # print(member)
     #     people.pop("+" + member.user.phone_number)
     # print(people)
+
+    await app.send_message(-1001567792707, "Проверка")
     await app.stop()
-
-
 
     # TARGET = -1001567792707
     # async with app:
@@ -54,6 +55,7 @@ async def job(filename: str):
 
 
 async def check_users_files(schedule):
+    # await app.start()
     global users_files
     """
     Функция для поиска файлов, добавленных пользователем
@@ -66,18 +68,22 @@ async def check_users_files(schedule):
                 continue
             else:
                 file_path = f"{files_dir}{username}/{path}"
-                parse_time = 60
+                parse_time = 3
                 schedule.add_job(job, "interval", args=[file_path], seconds=parse_time)
                 users_files[username] = [file_path]
     scheduler.start()
+    await idle()
     print(users_files)
+
+    # app.run()
+
     # print(users_files['484704240'])
-    await job(users_files['484704240'][0])
+    # await job(users_files['484704240'][0])
     return users_files
 
 
-# app.run()
-# scheduler = AsyncIOScheduler()
+# app.run(job('D:/Projects/Bot_for_TrueCode/users_files/484704240/file_0.xlsx'))
+scheduler = AsyncIOScheduler()
 # asyncio.run(check_users_files(scheduler))
-
+app.run(check_users_files(scheduler))
 
