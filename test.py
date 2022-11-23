@@ -2,8 +2,8 @@ import telebot
 import os
 from telebot.async_telebot import AsyncTeleBot
 
-import test1
-import test2
+# import test1
+# import test2
 
 
 # API_TOKEN = '1986393023:AAGmgNDQVTn_MmBBP1Y8DMJqLVSxwvQOvV8'
@@ -22,30 +22,28 @@ async def String_to_Command(string):
 async def make_markup_wo_upload_file():
     markup = telebot.types.InlineKeyboardMarkup()
     buttonA = telebot.types.InlineKeyboardButton('Остановить добавление', callback_data='stop')
-    buttonD = telebot.types.InlineKeyboardButton('Настройки', callback_data='settings')
+    # buttonD = telebot.types.InlineKeyboardButton('Настройки', callback_data='settings')
 
     markup.row(buttonA)
-    markup.row(buttonD)
+    # markup.row(buttonD)
 
     return markup
 
 
 async def make_markup():
     markup = telebot.types.InlineKeyboardMarkup()
-    buttonA = telebot.types.InlineKeyboardButton('Остановить добавление', callback_data='stop')
+    # buttonA = telebot.types.InlineKeyboardButton('Остановить добавление', callback_data='stop')
     buttonB = telebot.types.InlineKeyboardButton('Загрузить документ с номерами', callback_data='upload')
 
     markup.row(buttonB)
-    markup.row(buttonA)
+    # markup.row(buttonA)
 
     return markup
 
-@bot.message_handler(content_types=['text'])
-async def message(message):
-    await bot.send_message(message.chat.id, message.text)
-    # await test2.app.start()
-    await test2.main()
-    # await test2.app.stop()
+# @bot.message_handler(content_types=['text'])
+# async def message(message):
+#     await bot.send_message(message.chat.id, message.text)
+
 
 # Handle '/start'
 @bot.message_handler(commands=['start'])
@@ -88,7 +86,7 @@ async def get_file(message):
         markup = await make_markup_wo_upload_file()
         await bot.send_message(message.chat.id, 'Файл успешно загружен. Сейчас начнется добавление в канал', reply_markup=markup)
 
-        await test1.job('users_files/484704240/file_0.xlsx')
+        # await test1.job('users_files/484704240/file_0.xlsx')
         # await test1.('users_files/484704240/file_0.xlsx')
 
 
@@ -101,11 +99,11 @@ async def handle(call):
             if os.path.exists(files_dir):
                 counter = len(os.listdir(files_dir)) - 1
                 os.remove(f"{files_dir}/file_{counter}.xlsx")
-                await bot.send_message(chat_id=call.message.chat.id, text='Файл удален. Если вы захотите продолжить, то файл придется загрузить заново')
+                await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Файл удален. Если вы захотите продолжить, то файл придется загрузить заново')
         except:
             await bot.send_message(chat_id=call.message.chat.id, text='К сожалению, файлы не найдены(')
     elif call.data == 'upload':
-        await bot.send_message(chat_id=call.message.chat.id, text='Загрузите файл в формате .xlsx')
+        await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Загрузите файл в формате .xlsx')
     elif call.data == 'amount':
         markup = telebot.types.InlineKeyboardMarkup()
         buttonA = telebot.types.InlineKeyboardButton('Остановить добавление', callback_data='stop')
