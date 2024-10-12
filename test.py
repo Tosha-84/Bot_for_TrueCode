@@ -6,8 +6,7 @@ from telebot.async_telebot import AsyncTeleBot
 # import test2
 
 
-# API_TOKEN = '1986393023:AAGmgNDQVTn_MmBBP1Y8DMJqLVSxwvQOvV8'
-API_TOKEN = '5648589910:AAFArjtVL_BcnCKzRbJcKRpnlfRJV97YLWo'
+API_TOKEN = 'Bot_Token'
 # bot = telebot.TeleBot(API_TOKEN)
 bot = AsyncTeleBot(API_TOKEN)
 
