@@ -1,7 +1,6 @@
 import pandas as pd
 import re
 
-# data = [['Гамаюнова Аделина', '89842740104'], ['Вилачёв Антон', '89148891191']]
 # excel_file = "numbers.xlsx"
 
 
